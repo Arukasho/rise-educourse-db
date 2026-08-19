@@ -1,7 +1,26 @@
 import * as kelasSayaRepo from "../repositories/kelasSayaRepository.js";
 
-const getAllKelasSaya = async () => {
-  return await kelasSayaRepo.findAll();
+const getAllKelasSaya = async ({
+  search,
+  sortBy,
+  order,
+  page = 1,
+  limit = 10,
+} = {}) => {
+  const [data, total] = await Promise.all([
+    kelasSayaRepo.findAll({ search, sortBy, order, page, limit }),
+    kelasSayaRepo.countAll(search),
+  ]);
+
+  return {
+    data,
+    meta: {
+      total,
+      page: Number(page),
+      limit: Number(limit),
+      totalPages: Math.ceil(total / limit),
+    },
+  };
 };
 
 const getKelasSayaById = async (id) => {

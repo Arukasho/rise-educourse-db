@@ -2,8 +2,15 @@ import * as kelasService from "../services/kelasService.js";
 
 const getAll = async (req, res) => {
   try {
-    const data = await kelasService.getAllKelas();
-    res.status(200).json({ success: true, data });
+    const { search, sortBy, order, page, limit } = req.query;
+    const { data, meta } = await kelasService.getAllKelas({
+      search,
+      sortBy,
+      order,
+      page,
+      limit,
+    });
+    res.status(200).json({ success: true, data, meta });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
